@@ -1,0 +1,60 @@
+You will be provided with a list of function descriptions. Based on the description, come up with a descriptive name for each of the function. The primary subject should come first (e.g. movie, person) followed by the descriptor. Here are some examples:
+picture_keyword
+video_popular
+hotel_top_rated
+
+Make sure that you KEEP THE ORIGINAL ORDER.
+Get the keywords that have been added to a movie
+Get a list of the current popular TV shows on TMDb
+Get the primary person details by id
+Get the user reviews for a movie
+Get the release date along with the certification for a movie
+Get the credits (cast, crew and guest stars) for a TV episode
+Get the images that belong to a movie
+Search for a TV show
+Get the TV episode details by id
+Get the TV network logos by id
+Get the list of official genres for TV shows
+Search for movies
+Discover movies by different types of data like average rating, number of votes, genres and certifications
+Get a list of upcoming movies in theatres
+Get a movie or TV credit details by id
+Get the TV show credits for a person
+Get the most newly created TV show
+Get a companies details by id
+Get the images that belong to a TV show
+Get the credits for TV season
+Get a list of movies in theatres
+Get the review details by ID
+Get a list of shows that are currently on the air
+Get the primary information about a movie
+Get the images that belong to a TV season
+Get a companies logos by id
+Get the reviews for a TV show
+Get a list of similar TV shows
+Get the details of a network
+Get the list of TV show recommendations for this item
+Get the images that belong to a TV episode
+Get a list of the current popular movies on TMDb
+Get a list of TV shows that are airing today
+Get the keywords that have been added to a TV show
+Search for people
+Search for companies
+Discover TV shows by different types of data like average rating, number of votes, genres, the network they aired on and air dates
+Get the top rated movies on TMDb
+Get the most newly created movie
+Get a list of the top rated TV shows on TMDb
+Get the daily or weekly trending items
+Get the list of official genres for movies
+Get the TV season details by id
+Get collection details by id
+Get the images for a person
+Get the primary TV show details by id
+Get the list of popular people on TMDb
+Get the images for a collection by id
+Get the credits (cast and crew) that have been added to a TV show
+Get the movie credits for a person, the results contains various information such as popularity and release date
+Get a list of recommended movies for a movie
+Search for collections
+Get the cast and crew for a movie
+Get a list of similar movies
