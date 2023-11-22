@@ -1,9 +1,13 @@
+from collections import deque
+import torch
+
+
 class TrieNode:
     def __init__(self):
         self.children = {}
         self.end_of_word = False
         self.mask = None
-        
+
 
 class FunctionNameFSM():
     def __init__(self, functions, tokenizer, end_tokens):
@@ -12,10 +16,9 @@ class FunctionNameFSM():
         self._build_trie(functions)
         self._compute_mask()
         
-    
     def _build_trie(self, functions):
         self.root = TrieNode()
-        tokenized_func = [tokenizer.encode(s, bos=False, eos=False) for s in functions]
+        tokenized_func = [self.tokenizer.encode(s, bos=False, eos=False) for s in functions]
         for tokens in tokenized_func:
             node = self.root
             for token in tokens:
@@ -35,11 +38,9 @@ class FunctionNameFSM():
                 node.mask[self.end_tokens] = 1
             queue.extend(node.children.values())
         
-        
     def __call__(self, logits):
         logits[-1, ~self.root.mask] = -1e5
         return logits
-
 
     def push(self, token):
         token = int(token)
