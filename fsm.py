@@ -1,50 +1,46 @@
 class TrieNode:
     def __init__(self):
         self.children = {}
-        self.is_end_of_word = False
+        self.end_of_word = False
+        self.mask = None
+        
 
 class FunctionNameFSM():
     def __init__(self, functions, tokenizer, end_tokens):
-        self.functions = functions
         self.tokenizer = tokenizer
-        self.cur_str = ""
         self.end_tokens = end_tokens
-        self.trie = self.build_trie(self.functions)
-        self.cand_ids = np.arange(32000)
-        self.cand_tokens = []
-        for id in self.cand_ids.tolist():
-            self.cand_tokens.append(self.tokenizer.decode(id))
+        self._build_trie(functions)
+        self._compute_mask()
+        
     
-    def build_trie(self, words):
-        root = TrieNode()
-        for word in words:
-            node = root
-            for char in word:
-                if char not in node.children:
-                    node.children[char] = TrieNode()
-                node = node.children[char]
-            node.is_end_of_word = True
-        return root
-
-    def search_trie(self, prefix):
-        node = self.trie
-        for char in prefix:
-            if char in node.children:
-                node = node.children[char]
-            else:
-                return False
-        return True
+    def _build_trie(self, functions):
+        self.root = TrieNode()
+        tokenized_func = [tokenizer.encode(s, bos=False, eos=False) for s in functions]
+        for tokens in tokenized_func:
+            node = self.root
+            for token in tokens:
+                if token not in node.children:
+                    node.children[token] = TrieNode()
+                node = node.children[token]
+            node.end_of_word = True
     
+    def _compute_mask(self):
+        queue = deque()
+        queue.append(self.root)
+        while len(queue) > 0:
+            node = queue.popleft()
+            node.mask = torch.zeros((32000), dtype=bool)
+            node.mask[list(node.children.keys())] = 1
+            if node.end_of_word:
+                node.mask[self.end_tokens] = 1
+            queue.extend(node.children.values())
+        
+        
     def __call__(self, logits):
-        cand_prefixes = np.char.add(np.array(self.cur_str), np.array(self.cand_tokens))
-
-        if self.cur_str in self.functions:
-            mask = np.isin(self.cand_ids, self.end_tokens) | np.array([self.search_trie(prefix) for prefix in cand_prefixes])
-        else:
-            mask = np.array([self.search_trie(prefix) for prefix in cand_prefixes]) & np.char.not_equal(cand_prefixes,np.array(self.cur_str))
-
-        logits[-1, ~mask] = -1e5
+        logits[-1, ~self.root.mask] = -1e5
         return logits
 
+
     def push(self, token):
-        self.cur_str += self.tokenizer.decode([int(token)])
+        token = int(token)
+        self.root = self.root.children[token]
